@@ -1,0 +1,51 @@
+# Usamos una imagen base de Maven para compilar la aplicación
+FROM maven:3.8.4-amazoncorretto-11 as builder
+
+# Establecemos el directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copiamos el pom principal
+COPY pom.xml ./pom.xml
+
+# Copiamos los pom.xml y los directorios src de cada módulo en el orden correcto
+COPY common/pom.xml ./common/pom.xml
+COPY common/src ./common/src/
+
+COPY domain/pom.xml ./domain/pom.xml
+COPY domain/src ./domain/src/
+
+COPY application/pom.xml ./application/pom.xml
+COPY application/src ./application/src/
+
+COPY maria-output-adapter/pom.xml ./maria-output-adapter/pom.xml
+COPY maria-output-adapter/src ./maria-output-adapter/src/
+
+COPY mongo-output-adapter/pom.xml ./mongo-output-adapter/pom.xml
+COPY mongo-output-adapter/src ./mongo-output-adapter/src/
+
+COPY rest-input-adapter/pom.xml ./rest-input-adapter/pom.xml
+COPY rest-input-adapter/src ./rest-input-adapter/src/
+
+COPY cli-input-adapter/pom.xml ./cli-input-adapter/pom.xml
+COPY cli-input-adapter/src ./cli-input-adapter/src/
+
+# Ejecutamos mvn install para asegurarnos de que todos los artefactos estén disponibles localmente
+RUN mvn clean install -DskipTests
+
+# Ahora construimos el proyecto principal
+RUN mvn clean package -DskipTests
+
+# Usamos una imagen base de Amazon Corretto para ejecutar el servicio REST
+FROM amazoncorretto:11
+
+# Creamos un directorio para la aplicación
+WORKDIR /app
+
+# Copiamos el archivo .jar generado desde la fase de construcción
+COPY --from=builder /app/rest-input-adapter/target/*.jar app.jar
+
+# Exponemos el puerto que usará la aplicación REST
+EXPOSE 8080
+
+# Comando para ejecutar la aplicación
+ENTRYPOINT ["java", "-jar", "app.jar"]
