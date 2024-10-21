@@ -2,15 +2,18 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>co.edu.javeriana.as</groupId>
 		<artifactId>personapp-hexa-spring-boot</artifactId>
 		<version>${revision}</version>
 	</parent>
+
 	<groupId>co.edu.javeriana.as.personapp</groupId>
 	<artifactId>rest-input-adapter</artifactId>
 	<name>PersonAPP REST Input Adapter</name>
 	<description>REST API Input Adapter for PersonAPP</description>
+
 	<dependencies>
 		<dependency>
 			<groupId>co.edu.javeriana.as.personapp</groupId>
@@ -38,8 +41,10 @@
 			<version>1.7.0</version>
 		</dependency>
 	</dependencies>
+
 	<build>
 		<plugins>
+			<!-- Spring Boot Maven Plugin -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -51,6 +56,22 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+
+			<!-- Maven Jar Plugin to add Main-Class in MANIFEST.MF -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.2.0</version>
+				<configuration>
+					<archive>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>co.edu.javeriana.as.personapp.rest.PersonAppRestApplication</mainClass> <!-- Ajusta la clase principal -->
+						</manifest>
+					</archive>
 				</configuration>
 			</plugin>
 		</plugins>
