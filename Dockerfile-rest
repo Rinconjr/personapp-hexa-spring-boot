@@ -1,5 +1,5 @@
 # Usamos una imagen base de Maven para compilar la aplicación
-FROM maven:3.8.4-amazoncorretto-11 as builder
+FROM maven:3.8.4-amazoncorretto-17 as builder
 
 # Establecemos el directorio de trabajo dentro del contenedor
 WORKDIR /app
@@ -30,13 +30,13 @@ COPY cli-input-adapter/pom.xml ./cli-input-adapter/pom.xml
 COPY cli-input-adapter/src ./cli-input-adapter/src/
 
 # Ejecutamos mvn install para asegurarnos de que todos los artefactos estén disponibles localmente
-RUN mvn clean install -DskipTests
+RUN mvn clean
 
 # Ahora construimos el proyecto principal
-RUN mvn clean package -DskipTests
+RUN mvn install -DskipTests
 
 # Usamos una imagen base de Amazon Corretto para ejecutar el servicio REST
-FROM amazoncorretto:11
+FROM amazoncorretto:17
 
 # Creamos un directorio para la aplicación
 WORKDIR /app

@@ -1,5 +1,5 @@
 # Usamos una imagen base de Maven para compilar la aplicación
-FROM maven:3.8.4-amazoncorretto-11 as builder
+FROM maven:3.8.4-amazoncorretto-17 as builder
 
 # Establecemos el directorio de trabajo dentro del contenedor
 WORKDIR /app
