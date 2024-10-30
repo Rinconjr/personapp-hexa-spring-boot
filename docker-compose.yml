@@ -32,6 +32,7 @@ services:
     volumes:
       - mongo_data:/data/db
       - ./scripts/persona_ddl_mongo.js:/docker-entrypoint-initdb.d/persona_ddl_mongo.js:ro
+      - ./scripts/persona_dml_mongo.js:/docker-entrypoint-initdb.d/persona_dml_mongo.js:ro
     networks:
       - app-network
 
