@@ -13,10 +13,10 @@ services:
       - mongo
       - mariadb
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/personapp
+      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/person_app
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: rootpassword
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/personapp
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/person_app
     networks:
       - app-network
 
@@ -28,6 +28,7 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+      - ./scripts:/docker-entrypoint-initdb.d:ro
     networks:
       - app-network
 
@@ -39,11 +40,12 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: personapp
+      MYSQL_DATABASE: persona_db
       MYSQL_USER: user
       MYSQL_PASSWORD: userpassword
     volumes:
       - mariadb_data:/var/lib/mysql
+      - ./scripts:/docker-entrypoint-initdb.d  # Asegúrate de que los scripts estén aquí
     networks:
       - app-network
 
