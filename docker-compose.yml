@@ -1,61 +1,36 @@
 version: '3.8'
 
 services:
-  # Servicio REST
   rest-service:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: rest-service
+      dockerfile: Dockerfile  # Ruta al Dockerfile multietapa
     ports:
       - "8080:8080"
     depends_on:
-      - mongo
-      - mariadb
+      - mongo-db
+      - maria-db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mariadb://mariadb:3306/person_app
+      SPRING_DATA_MONGODB_URI: mongodb://mongo-db:27017/personapp
+      SPRING_DATASOURCE_URL: jdbc:mariadb://maria-db:3306/personapp
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: rootpassword
-      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/person_app
-    networks:
-      - app-network
+      SPRING_DATASOURCE_PASSWORD: example
+      APP_DEBUG_LEVEL: INFO
 
   # Servicio MongoDB
-  mongo:
-    image: mongo:5.0
-    container_name: mongodb
+  mongo-db:
+    image: mongo:latest
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: 'root'
-      MONGO_INITDB_ROOT_PASSWORD: 'rootpassword'
-      MONGO_INITDB_DATABASE: person_app
-    volumes:
-      - mongo_data:/data/db
-      - ./scripts:/docker-entrypoint-initdb.d/init-mongo.js:ro
-    networks:
-      - app-network
+      MONGO_INITDB_DATABASE: personapp
 
   # Servicio MariaDB
-  mariadb:
-    image: mariadb:10.5
-    container_name: mariadb
+  maria-db:
+    image: mariadb:latest
     ports:
-      - "3306:3306"
+      - "3307:3306"  # Mapear el puerto del contenedor (3306) al puerto del host (3307)
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: persona_db
-      MYSQL_USER: user
-      MYSQL_PASSWORD: userpassword
-    volumes:
-      - mariadb_data:/var/lib/mysql
-      - ./scripts:/docker-entrypoint-initdb.d  # Asegúrate de que los scripts estén aquí
-    networks:
-      - app-network
-
-networks:
-  app-network:
-
-volumes:
-  mongo_data:
-  mariadb_data:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: personapp
+      

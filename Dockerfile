@@ -1,51 +1,42 @@
-# Usamos una imagen base de Maven para compilar la aplicación
-FROM maven:3.8.4-amazoncorretto-17 as builder
+# Todo lo del alpine se saca de este link https://hub.docker.com/_/amazoncorretto/tags?page=2
+# Etapa de construcción
+FROM maven:3.9.9-amazoncorretto-17-alpine AS builder
 
-# Establecemos el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiamos el pom principal
-COPY pom.xml ./pom.xml
+# Copiar archivos POM y descargar dependencias sin compilar
+COPY pom.xml ./
+COPY common/pom.xml common/
+COPY domain/pom.xml domain/
+COPY application/pom.xml application/
+COPY maria-output-adapter/pom.xml maria-output-adapter/
+COPY mongo-output-adapter/pom.xml mongo-output-adapter/
+COPY rest-input-adapter/pom.xml rest-input-adapter/
+COPY cli-input-adapter/pom.xml cli-input-adapter/
 
-# Copiamos los pom.xml y los directorios src de cada módulo en el orden correcto
-COPY common/pom.xml ./common/pom.xml
-COPY common/src ./common/src/
+RUN mvn dependency:go-offline -B
 
-COPY domain/pom.xml ./domain/pom.xml
-COPY domain/src ./domain/src/
+# Copiar código fuente y construir el proyecto
+COPY common/src common/src
+COPY domain/src domain/src
+COPY application/src application/src
+COPY maria-output-adapter/src maria-output-adapter/src
+COPY mongo-output-adapter/src mongo-output-adapter/src
+COPY rest-input-adapter/src rest-input-adapter/src
+COPY cli-input-adapter/src cli-input-adapter/src
 
-COPY application/pom.xml ./application/pom.xml
-COPY application/src ./application/src/
+# Construir el JAR
+RUN mvn clean package -DskipTests
 
-COPY maria-output-adapter/pom.xml ./maria-output-adapter/pom.xml
-COPY maria-output-adapter/src ./maria-output-adapter/src/
+# Etapa de ejecución
+FROM amazoncorretto:17.0.13-alpine
 
-COPY mongo-output-adapter/pom.xml ./mongo-output-adapter/pom.xml
-COPY mongo-output-adapter/src ./mongo-output-adapter/src/
+WORKDIR /PERSONAPP-HEXA-SPRING-BOOT
 
-COPY rest-input-adapter/pom.xml ./rest-input-adapter/pom.xml
-COPY rest-input-adapter/src ./rest-input-adapter/src/
+# Copiar el JAR desde la etapa de construcción
+COPY --from=builder /app/rest-input-adapter/target/rest-input-adapter-0.0.1-SNAPSHOT.jar app.jar
 
-COPY cli-input-adapter/pom.xml ./cli-input-adapter/pom.xml
-COPY cli-input-adapter/src ./cli-input-adapter/src/
 
-# Ejecutamos mvn install para asegurarnos de que todos los artefactos estén disponibles localmente
-RUN mvn clean
-
-# Ahora construimos el proyecto principal
-RUN mvn install -DskipTests
-
-# Usamos una imagen base de Amazon Corretto para ejecutar el servicio REST
-FROM amazoncorretto:17
-
-# Creamos un directorio para la aplicación
-WORKDIR /app
-
-# Copiamos el archivo .jar generado desde la fase de construcción
-COPY --from=builder /app/rest-input-adapter/target/*.jar app.jar
-
-# Exponemos el puerto que usará la aplicación REST
 EXPOSE 8080
 
-# Comando para ejecutar la aplicación
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar", "--spring.profiles.active=live"]
