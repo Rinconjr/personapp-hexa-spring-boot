@@ -4,33 +4,57 @@ services:
   rest-service:
     build:
       context: .
-      dockerfile: Dockerfile  # Ruta al Dockerfile multietapa
+      dockerfile: Dockerfile
+    container_name: rest-service
     ports:
       - "8080:8080"
     depends_on:
       - mongo-db
       - maria-db
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongo-db:27017/personapp
-      SPRING_DATASOURCE_URL: jdbc:mariadb://maria-db:3306/personapp
+      SPRING_DATA_MONGODB_URI: mongodb://mongo-db:27017/persona_db
+      SPRING_DATASOURCE_URL: jdbc:mariadb://maria-db:3306/persona_db
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: example
+      SPRING_DATASOURCE_PASSWORD: rootpassword
       APP_DEBUG_LEVEL: INFO
+    networks:
+      - app-network
 
-  # Servicio MongoDB
   mongo-db:
-    image: mongo:latest
+    image: mongo:5.0
+    container_name: mongo-db
     ports:
       - "27017:27017"
     environment:
-      MONGO_INITDB_DATABASE: personapp
+      MONGO_INITDB_ROOT_USERNAME: 'root'
+      MONGO_INITDB_ROOT_PASSWORD: 'rootpassword'
+      MONGO_INITDB_DATABASE: persona_db
+    volumes:
+      - mongo_data:/data/db
+      - ./scripts/persona_ddl_mongo.js:/docker-entrypoint-initdb.d/persona_ddl_mongo.js:ro
+    networks:
+      - app-network
 
-  # Servicio MariaDB
   maria-db:
-    image: mariadb:latest
+    image: mariadb:10.5
+    container_name: mariadb
     ports:
-      - "3307:3306"  # Mapear el puerto del contenedor (3306) al puerto del host (3307)
+      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: personapp
-      
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: persona_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./scripts:/docker-entrypoint-initdb.d
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+
+volumes:
+  mongo_data:
+  mariadb_data:
