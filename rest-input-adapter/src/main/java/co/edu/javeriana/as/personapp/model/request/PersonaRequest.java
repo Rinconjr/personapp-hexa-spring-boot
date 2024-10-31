@@ -12,6 +12,6 @@ public class PersonaRequest {
 	private String firstName;
 	private String lastName;
 	private String age;
-	private String sex;
+	private String gender;
 	private String database;
 }

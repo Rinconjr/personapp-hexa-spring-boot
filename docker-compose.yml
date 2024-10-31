@@ -12,7 +12,7 @@ services:
       - mongo-db
       - maria-db
     environment:
-      SPRING_DATA_MONGODB_URI: mongodb://mongo-db:27017/persona_db
+      SPRING_DATA_MONGODB_URI: mongodb://persona_db:persona_db@mongo-db:27017/persona_db?authSource=admin
       SPRING_DATASOURCE_URL: jdbc:mariadb://maria-db:3306/persona_db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: rootpassword
