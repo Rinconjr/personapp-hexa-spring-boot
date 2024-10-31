@@ -16,12 +16,16 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mariadb://maria-db:3306/persona_db
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: rootpassword
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.mariadb.jdbc.Driver
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MariaDBDialect
       APP_DEBUG_LEVEL: INFO
     networks:
       - app-network
+    restart: always
 
   mongo-db:
-    image: mongo:5.0
+    image: mongo:latest
     container_name: mongo-db
     ports:
       - "27017:27017"
@@ -37,7 +41,7 @@ services:
       - app-network
 
   maria-db:
-    image: mariadb:10.5
+    image: mariadb:latest
     container_name: mariadb
     ports:
       - "3306:3306"
@@ -51,7 +55,6 @@ services:
       - ./scripts:/docker-entrypoint-initdb.d
     networks:
       - app-network
-
 
 networks:
   app-network:
