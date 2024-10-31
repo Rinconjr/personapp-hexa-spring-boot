@@ -83,9 +83,15 @@ public class PersonaInputAdapterRest {
 	// TODO: Falta implementar el if else para MariaDB y MongoDB
 	public PersonaResponse buscarPersona(String database, Integer idInteger) {
 		try {
+			if (database.equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
 			setPersonOutputPortInjection(database);
 			Person person = personInputPort.findOne(idInteger);
 			return personaMapperRest.fromDomainToAdapterRestMaria(person);
+			}else {
+				setPersonOutputPortInjection(database);
+				Person person = personInputPort.findOne(idInteger);
+				return personaMapperRest.fromDomainToAdapterRestMongo(person);
+			}
 		} catch (InvalidOptionException e) {
 			log.warn(e.getMessage());
 		} catch (NoExistException e) {
@@ -130,5 +136,6 @@ public class PersonaInputAdapterRest {
 		}
 		return null;
 	}
+
 
 }
