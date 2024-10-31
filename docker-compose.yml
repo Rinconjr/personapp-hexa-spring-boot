@@ -25,7 +25,7 @@ services:
     restart: always
 
   mongo-db:
-    image: mongo:latest
+    image: mongo:5.0
     container_name: mongo-db
     ports:
       - "27017:27017"
@@ -41,7 +41,7 @@ services:
       - app-network
 
   maria-db:
-    image: mariadb:latest
+    image: mariadb:10.5
     container_name: mariadb
     ports:
       - "3306:3306"
