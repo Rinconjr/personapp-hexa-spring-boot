@@ -12,6 +12,7 @@ import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
 import co.edu.javeriana.as.personapp.application.usecase.PersonUseCase;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
+import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.common.setup.DatabaseOption;
 import co.edu.javeriana.as.personapp.domain.Gender;
 import co.edu.javeriana.as.personapp.domain.Person;
@@ -66,6 +67,7 @@ public class PersonaInputAdapterRest {
 		}
 	}
 
+	// TODO: Falta implementar el if else para MariaDB y MongoDB
 	public PersonaResponse crearPersona(PersonaRequest request) {
 		try {
 			setPersonOutputPortInjection(request.getDatabase());
@@ -74,6 +76,57 @@ public class PersonaInputAdapterRest {
 		} catch (InvalidOptionException e) {
 			log.warn(e.getMessage());
 			//return new PersonaResponse("", "", "", "", "", "", "");
+		}
+		return null;
+	}
+
+	// TODO: Falta implementar el if else para MariaDB y MongoDB
+	public PersonaResponse buscarPersona(String database, Integer idInteger) {
+		try {
+			setPersonOutputPortInjection(database);
+			Person person = personInputPort.findOne(idInteger);
+			return personaMapperRest.fromDomainToAdapterRestMaria(person);
+		} catch (InvalidOptionException e) {
+			log.warn(e.getMessage());
+		} catch (NoExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	// TODO: Falta implementar el if else para MariaDB y MongoDB
+	public PersonaResponse eliminarPersona(String database, Integer idInteger) {
+		try {
+			setPersonOutputPortInjection(database);
+			Boolean eliminado = personInputPort.drop(idInteger);
+			return new PersonaResponse("", "", "", "", "", "", eliminado.toString());
+		} catch (InvalidOptionException e) {
+			log.warn(e.getMessage());
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	// TODO: Falta implementar el if else para MariaDB y MongoDB
+	public PersonaResponse actualizarPersona(PersonaRequest request) {
+		try {
+			setPersonOutputPortInjection(request.getDatabase());
+			Person person = personInputPort.edit(Integer.parseInt(request.getDni()),personaMapperRest.fromAdapterToDomain(request));
+			return personaMapperRest.fromDomainToAdapterRestMaria(person);
+		} catch (InvalidOptionException e) {
+			log.warn(e.getMessage());
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return null;
 	}
