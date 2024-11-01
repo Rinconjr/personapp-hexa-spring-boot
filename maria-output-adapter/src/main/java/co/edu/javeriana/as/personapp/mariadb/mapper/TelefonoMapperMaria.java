@@ -36,6 +36,8 @@ public class TelefonoMapperMaria {
 	}
 
 	private @NonNull Person validateOwner(PersonaEntity duenio) {
-		return duenio != null ? personaMapperMaria.fromAdapterToDomain(duenio) : new Person();
+		Person owner = new Person();
+		owner.setIdentification(duenio.getCc());
+		return owner;
 	}
 }
