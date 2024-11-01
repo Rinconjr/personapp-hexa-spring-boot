@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.List;
-/*
+
 @Slf4j
 @UseCase
 public class StudyUseCase implements StudyInputPort {
@@ -30,7 +30,7 @@ public class StudyUseCase implements StudyInputPort {
 
     @Override
     public Study create(Study study) {
-        log.debug("Into Study create on Application Domain");
+        log.debug("Into create study on Application Domain");
         return studyPersistence.save(study);
     }
 
@@ -40,7 +40,7 @@ public class StudyUseCase implements StudyInputPort {
         if(oldStudy != null)
             return studyPersistence.save(study);
 
-        throw new NoExistException("The study with professionID " + professionID+" and personID "+personID+" does not exist into db, cannot be edited");
+        throw new NoExistException("The study with professionID " + professionID +" and personID "+ personID +" does not exist into db, cannot be edited");
 
 
     }
@@ -51,7 +51,7 @@ public class StudyUseCase implements StudyInputPort {
         if(oldStudy!=null)
             return studyPersistence.delete(professionID, personID);
 
-        throw new NoExistException("The study with professionID " + professionID+" and personID "+personID+" does not exist into db, cannot be dropped");
+        throw new NoExistException("The study with professionID " + professionID +" and personID "+ personID +" does not exist into db, cannot be dropped");
     }
 
     @Override
@@ -66,7 +66,7 @@ public class StudyUseCase implements StudyInputPort {
         if(oldStudy!=null)
             return oldStudy;
 
-        throw new NoExistException("The study with professionID " + professionID+" and personID "+personID+" does not exist into db, cannot be found");
+        throw new NoExistException("The study with professionID " + professionID +" and personID "+ personID +" does not exist into db, cannot be found");
     }
 
     @Override
@@ -80,7 +80,7 @@ public class StudyUseCase implements StudyInputPort {
         if(oldStudy!=null)
             return oldStudy.getPerson();
 
-        throw new NoExistException("The study with professionID " + professionID+" and personID "+personID+" does not exist into db, cannot be found");
+        throw new NoExistException("The study with professionID " + professionID +" and personID "+ personID +" does not exist into db, cannot be found");
     }
 
     @Override
@@ -89,8 +89,7 @@ public class StudyUseCase implements StudyInputPort {
         if(oldStudy!=null)
             return oldStudy.getProfession();
 
-        throw new NoExistException("The study with professionID " + professionID+" and personID "+personID+" does not exist into db, cannot be found");
+        throw new NoExistException("The study with professionID " + professionID +" and personID "+ personID +" does not exist into db, cannot be found");
     }
     
 }
-    */
