@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import co.edu.javeriana.as.personapp.terminal.menu.MenuPrincipal;
-import lombok.extern.srlf4j.Slf4j;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootApplication
