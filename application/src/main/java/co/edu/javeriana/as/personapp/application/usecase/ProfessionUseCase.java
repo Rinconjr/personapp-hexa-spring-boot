@@ -12,7 +12,7 @@ import co.edu.javeriana.as.personapp.domain.Profession;
 import co.edu.javeriana.as.personapp.domain.Study;
 import lombok.extern.slf4j.Slf4j;
 
-/*
+
 @Slf4j
 @UseCase
 public class ProfessionUseCase implements ProfessionInputPort  {
@@ -20,7 +20,7 @@ public class ProfessionUseCase implements ProfessionInputPort  {
 	
 	private ProfessionOutPort professionPersintence;
 	
-	public ProfessionUseCase(@Qualifier("professionOutputAdapter") ProfessionOutPort professionPersintence) {
+	public ProfessionUseCase(@Qualifier("professionOutputAdapterMaria") ProfessionOutPort professionPersintence) {
 		this.professionPersintence=professionPersintence;
 	}
 	
@@ -82,4 +82,3 @@ public class ProfessionUseCase implements ProfessionInputPort  {
 				"The person with id " + identification + " does not exist into db, cannot be getting studies");
 	}
 }
-*/
