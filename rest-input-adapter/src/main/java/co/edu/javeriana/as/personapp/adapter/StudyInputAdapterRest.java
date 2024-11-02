@@ -87,6 +87,7 @@ public class StudyInputAdapterRest {
         }
     }
 
+    // View All Studies
     public List<StudyResponse> historial(String database) {
         log.info("Into historial StudyEntity in Input Adapter");
         try {
@@ -103,11 +104,34 @@ public class StudyInputAdapterRest {
         }
     }
 
-    public StudyResponse crearEstudio(StudyRequest request) {
+    // Create Study
+    public Boolean crearEstudio(StudyRequest request) {
         log.info("Into crearEstudio StudyEntity in Input Adapter");
         
+        try{
+            if(setStudyOutputPortInjection(request.getDatabase()).equalsIgnoreCase(DatabaseOption.MARIA.toString())){
+                log.info("Creating Study in MariaDB");
+                log.info("idProfession: " + request.getIdProfession());
+                log.info("idPerson: " + request.getIdCcPerson());
+                log.info("idStudy: " + request.getGraduationDate());
+                log.info("name: " + request.getUniversity());
+                log.info("type: " + request.getDatabase());
+                
+                return true;
+            } else {
+                log.info("Creating Study in MongoDB");
+                log.info("idProfession: " + request.getIdProfession());
+                log.info("idPerson: " + request.getIdCcPerson());
+                log.info("idStudy: " + request.getGraduationDate());
+                log.info("name: " + request.getUniversity());
+                log.info("type: " + request.getDatabase());
+                return false;
+            }
+        } catch (InvalidOptionException e) {
+            log.error(e.getMessage());
+        }
 
-        return null;
+        return true;
     }
     
 }
