@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Adapter
 public class PhoneInputAdapterRest {
-//Maria
+	//Maria
 	@Autowired
 	@Qualifier("phoneOutputAdapterMaria")
 	private PhoneOutputPort phoneOutputPortMaria;
@@ -39,7 +39,7 @@ public class PhoneInputAdapterRest {
 	@Autowired
 	@Qualifier("phoneOutputAdapterMongo")
     private PhoneOutputPort phoneOutputPortMongo;
-//Mongo
+	//Mongo
     @Autowired
     @Qualifier("personOutputAdapterMongo")
     private PersonOutputPort personOutputPortMongo;
@@ -81,77 +81,80 @@ public class PhoneInputAdapterRest {
 		}
 	}
 
-	// TODO: Falta implementar el if else para MariaDB y MongoDB
 	public PhoneResponse crearPhone(PhoneRequest request) throws NumberFormatException, NoExistException {
 		try {
 			setPhoneOutputPortInjection(request.getDatabase());
-            Person owner = personInputPort.findOne(Integer.parseInt(request.getDueno()));
-            Phone phone = phoneInputPort.create(phoneMapperRest.fromAdapterToDomain(request,owner));
-			return phoneMapperRest.fromDomainToAdapterRestMaria(phone);
-		} catch (InvalidOptionException e) {
-			log.warn(e.getMessage());
-			//return new PersonaResponse("", "", "", "", "", "", "");
-		}
-		return null;
-	}
-
-	// TODO: Falta implementar el if else para MariaDB y MongoDB
-	public PhoneResponse buscarPhone(String database, String number) {
-		try {
-			if (database.equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
-			setPhoneOutputPortInjection(database);
-            Phone phone = phoneInputPort.findOne(number);
-			return phoneMapperRest.fromDomainToAdapterRestMaria(phone);
-			}else {
-				setPhoneOutputPortInjection(database);
-                Phone phone = phoneInputPort.findOne(number);
+			Person owner = personInputPort.findOne(Integer.parseInt(request.getDueno()));
+			Phone phone = phoneInputPort.create(phoneMapperRest.fromAdapterToDomain(request, owner));
+	
+			if (request.getDatabase().equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
+				return phoneMapperRest.fromDomainToAdapterRestMaria(phone);
+			} else {
 				return phoneMapperRest.fromDomainToAdapterRestMongo(phone);
 			}
 		} catch (InvalidOptionException e) {
 			log.warn(e.getMessage());
-		} catch (NoExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return new PhoneResponse(request.getNumber(), "", "", request.getDatabase(), "Error: Invalid Database Option");
 		}
-		return null;
 	}
+	
 
-	// TODO: Falta implementar el if else para MariaDB y MongoDB
+	public PhoneResponse buscarPhone(String database, String number) {
+		try {
+			setPhoneOutputPortInjection(database);
+			Phone phone = phoneInputPort.findOne(number);
+	
+			if (database.equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
+				return phoneMapperRest.fromDomainToAdapterRestMaria(phone);
+			} else {
+				return phoneMapperRest.fromDomainToAdapterRestMongo(phone);
+			}
+		} catch (InvalidOptionException e) {
+			log.warn(e.getMessage());
+			return new PhoneResponse(number, "", "", database, "Error: Invalid Database Option");
+		} catch (NoExistException e) {
+			log.warn(e.getMessage());
+			return new PhoneResponse(number, "", "", database, "Error: Phone not found");
+		}
+	}
+	
+
 	public PhoneResponse eliminarPhone(String database, String number) {
 		try {
 			setPhoneOutputPortInjection(database);
 			Boolean eliminado = phoneInputPort.drop(number);
-			return new PhoneResponse("",  "", "", "", eliminado.toString());
+	
+			return new PhoneResponse(number, "", "", database, eliminado ? "Deleted" : "Failed to Delete");
 		} catch (InvalidOptionException e) {
 			log.warn(e.getMessage());
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return new PhoneResponse(number, "", "", database, "Error: Invalid Database Option");
 		} catch (NoExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
+			return new PhoneResponse(number, "", "", database, "Error: Phone not found");
 		}
-		return null;
 	}
+	
 
-	// TODO: Falta implementar el if else para MariaDB y MongoDB
 	public PhoneResponse actualizarPhone(PhoneRequest request) {
 		try {
 			setPhoneOutputPortInjection(request.getDatabase());
-            Person owner = personInputPort.findOne(Integer.parseInt(request.getDueno()));
-            Phone phone = phoneInputPort.edit(request.getNumber(),phoneMapperRest.fromAdapterToDomain(request,owner));
-			return phoneMapperRest.fromDomainToAdapterRestMaria(phone);
+			Person owner = personInputPort.findOne(Integer.parseInt(request.getDueno()));
+			Phone phone = phoneInputPort.edit(request.getNumber(), phoneMapperRest.fromAdapterToDomain(request, owner));
+	
+			if (request.getDatabase().equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
+				return phoneMapperRest.fromDomainToAdapterRestMaria(phone);
+			} else {
+				return phoneMapperRest.fromDomainToAdapterRestMongo(phone);
+			}
 		} catch (InvalidOptionException e) {
 			log.warn(e.getMessage());
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return new PhoneResponse(request.getNumber(), "", "", request.getDatabase(), "Error: Invalid Database Option");
 		} catch (NoExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
+			return new PhoneResponse(request.getNumber(), "", "", request.getDatabase(), "Error: Update Failed - Phone not found");
 		}
-		return null;
 	}
+	
 
 
 }

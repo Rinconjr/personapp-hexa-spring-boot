@@ -66,75 +66,82 @@ public class ProfessionInputAdapterRest {
 		}
 	}
 
-	// TODO: Falta implementar el if else para MariaDB y MongoDB
 	public ProfessionResponse crearProfesion(ProfessionRequest request) {
+		log.info("Into crearProfesion ProfessionEntity in Input Adapter");
 		try {
 			setProfessionOutputPortInjection(request.getDatabase());
 			Profession profession = professionInputPort.create(professionMapperRest.fromAdapterToDomain(request));
-			return professionMapperRest.fromDomainToAdapterRestMaria(profession);
-		} catch (InvalidOptionException e) {
-			log.warn(e.getMessage());
-			//return new PersonaResponse("", "", "", "", "", "", "");
-		}
-		return null;
-	}
-
-	// TODO: Falta implementar el if else para MariaDB y MongoDB
-	public ProfessionResponse buscarProfession(String database, Integer idInteger) {
-		try {
-			if (database.equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
-			setProfessionOutputPortInjection(database);
-			Profession profession = professionInputPort.findOne(idInteger);
-			return professionMapperRest.fromDomainToAdapterRestMaria(profession);
-			}else {
-				setProfessionOutputPortInjection(database);
-                Profession profession = professionInputPort.findOne(idInteger);
+	
+			if (request.getDatabase().equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
+				return professionMapperRest.fromDomainToAdapterRestMaria(profession);
+			} else {
 				return professionMapperRest.fromDomainToAdapterRestMongo(profession);
 			}
 		} catch (InvalidOptionException e) {
 			log.warn(e.getMessage());
-		} catch (NoExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return new ProfessionResponse(request.getIdentification(), request.getName(), request.getDescription(), request.getDatabase(), "Error: Invalid Database Option");
 		}
-		return null;
 	}
+	
 
-	// TODO: Falta implementar el if else para MariaDB y MongoDB
+	public ProfessionResponse buscarProfession(String database, Integer idInteger) {
+		log.info("Into buscarProfession ProfessionEntity in Input Adapter");
+		try {
+			setProfessionOutputPortInjection(database);
+			Profession profession = professionInputPort.findOne(idInteger);
+	
+			if (database.equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
+				return professionMapperRest.fromDomainToAdapterRestMaria(profession);
+			} else {
+				return professionMapperRest.fromDomainToAdapterRestMongo(profession);
+			}
+		} catch (InvalidOptionException e) {
+			log.warn(e.getMessage());
+			return new ProfessionResponse(idInteger.toString(), "", "", database, "Error: Invalid Database Option");
+		} catch (NoExistException e) {
+			log.warn(e.getMessage());
+			return new ProfessionResponse(idInteger.toString(), "", "", database, "Error: Profession not found");
+		}
+	}
+	
+
 	public ProfessionResponse eliminarProfession(String database, Integer idInteger) {
+		log.info("Into eliminarProfession ProfessionEntity in Input Adapter");
 		try {
 			setProfessionOutputPortInjection(database);
 			Boolean eliminado = professionInputPort.drop(idInteger);
-			return new ProfessionResponse("", "", "",  "", eliminado.toString());
+	
+			return new ProfessionResponse(idInteger.toString(), "", "", database, eliminado ? "Deleted" : "Failed to Delete");
 		} catch (InvalidOptionException e) {
 			log.warn(e.getMessage());
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return new ProfessionResponse(idInteger.toString(), "", "", database, "Error: Invalid Database Option");
 		} catch (NoExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
+			return new ProfessionResponse(idInteger.toString(), "", "", database, "Error: Profession not found");
 		}
-		return null;
 	}
+	
 
-	// TODO: Falta implementar el if else para MariaDB y MongoDB
 	public ProfessionResponse actualizarProfesion(ProfessionRequest request) {
+		log.info("Into actualizarProfesion ProfessionEntity in Input Adapter");
 		try {
 			setProfessionOutputPortInjection(request.getDatabase());
-            Profession profession = professionInputPort.edit(Integer.parseInt(request.getIdentification()),professionMapperRest.fromAdapterToDomain(request));
-			return professionMapperRest.fromDomainToAdapterRestMaria(profession);
+			Profession profession = professionInputPort.edit(Integer.parseInt(request.getIdentification()), professionMapperRest.fromAdapterToDomain(request));
+	
+			if (request.getDatabase().equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
+				return professionMapperRest.fromDomainToAdapterRestMaria(profession);
+			} else {
+				return professionMapperRest.fromDomainToAdapterRestMongo(profession);
+			}
 		} catch (InvalidOptionException e) {
 			log.warn(e.getMessage());
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return new ProfessionResponse(request.getIdentification(), request.getName(), request.getDescription(), request.getDatabase(), "Error: Invalid Database Option");
 		} catch (NoExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
+			return new ProfessionResponse(request.getIdentification(), request.getName(), request.getDescription(), request.getDatabase(), "Error: Update Failed - Profession not found");
 		}
-		return null;
 	}
+	
 
 
 }

@@ -66,75 +66,73 @@ public class PersonaInputAdapterRest {
 		}
 	}
 
-	// TODO: Falta implementar el if else para MariaDB y MongoDB
 	public PersonaResponse crearPersona(PersonaRequest request) {
-		try {
-			setPersonOutputPortInjection(request.getDatabase());
-			Person person = personInputPort.create(personaMapperRest.fromAdapterToDomain(request));
-			return personaMapperRest.fromDomainToAdapterRestMaria(person);
-		} catch (InvalidOptionException e) {
-			log.warn(e.getMessage());
-			//return new PersonaResponse("", "", "", "", "", "", "");
-		}
-		return null;
-	}
+        try {
+            setPersonOutputPortInjection(request.getDatabase());
+            Person person = personInputPort.create(personaMapperRest.fromAdapterToDomain(request));
+            if (request.getDatabase().equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
+                return personaMapperRest.fromDomainToAdapterRestMaria(person);
+            } else {
+                return personaMapperRest.fromDomainToAdapterRestMongo(person);
+            }
+        } catch (InvalidOptionException e) {
+            log.warn(e.getMessage());
+            return new PersonaResponse(request.getDni(), request.getFirstName(), request.getLastName(),
+                    request.getAge(), request.getGender(), request.getDatabase(),
+                    "Error: Invalid Database Option");
+        }
+    }
+	
 
-	// TODO: Falta implementar el if else para MariaDB y MongoDB
 	public PersonaResponse buscarPersona(String database, Integer idInteger) {
-		try {
-			if (database.equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
-			setPersonOutputPortInjection(database);
-			Person person = personInputPort.findOne(idInteger);
-			return personaMapperRest.fromDomainToAdapterRestMaria(person);
-			}else {
-				setPersonOutputPortInjection(database);
-				Person person = personInputPort.findOne(idInteger);
-				return personaMapperRest.fromDomainToAdapterRestMongo(person);
-			}
-		} catch (InvalidOptionException e) {
-			log.warn(e.getMessage());
-		} catch (NoExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+        try {
+            setPersonOutputPortInjection(database);
+            Person person = personInputPort.findOne(idInteger);
+            if (database.equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
+                return personaMapperRest.fromDomainToAdapterRestMaria(person);
+            } else {
+                return personaMapperRest.fromDomainToAdapterRestMongo(person);
+            }
+        } catch (InvalidOptionException | NoExistException e) {
+            log.warn(e.getMessage());
+            return new PersonaResponse(idInteger.toString(), "", "", "", "", database,
+                    "Error: Person not found");
+        }
+    }
+	
 
-	// TODO: Falta implementar el if else para MariaDB y MongoDB
 	public PersonaResponse eliminarPersona(String database, Integer idInteger) {
-		try {
-			setPersonOutputPortInjection(database);
-			Boolean eliminado = personInputPort.drop(idInteger);
-			return new PersonaResponse("", "", "", "", "", "", eliminado.toString());
-		} catch (InvalidOptionException e) {
-			log.warn(e.getMessage());
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+        try {
+            setPersonOutputPortInjection(database);
+            Boolean eliminado = personInputPort.drop(idInteger);
+            return new PersonaResponse(idInteger.toString(), "", "", "", "", database,
+                    eliminado ? "Deleted" : "Failed to Delete");
+        } catch (InvalidOptionException | NoExistException e) {
+            log.warn(e.getMessage());
+            return new PersonaResponse(idInteger.toString(), "", "", "", "", database,
+                    "Error: Person not found or invalid database");
+        }
+    }
+	
 
-	// TODO: Falta implementar el if else para MariaDB y MongoDB
 	public PersonaResponse actualizarPersona(PersonaRequest request) {
-		try {
-			setPersonOutputPortInjection(request.getDatabase());
-			Person person = personInputPort.edit(Integer.parseInt(request.getDni()),personaMapperRest.fromAdapterToDomain(request));
-			return personaMapperRest.fromDomainToAdapterRestMaria(person);
-		} catch (InvalidOptionException e) {
-			log.warn(e.getMessage());
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
+        try {
+            setPersonOutputPortInjection(request.getDatabase());
+            Person person = personInputPort.edit(Integer.parseInt(request.getDni()),
+                    personaMapperRest.fromAdapterToDomain(request));
+            if (request.getDatabase().equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
+                return personaMapperRest.fromDomainToAdapterRestMaria(person);
+            } else {
+                return personaMapperRest.fromDomainToAdapterRestMongo(person);
+            }
+        } catch (InvalidOptionException | NoExistException e) {
+            log.warn(e.getMessage());
+            return new PersonaResponse(request.getDni(), request.getFirstName(), request.getLastName(),
+                    request.getAge(), request.getGender(), request.getDatabase(),
+                    "Error: Update Failed");
+        }
+    }
+	
 
 
 }

@@ -23,14 +23,20 @@ public class StudyMapperRest {
     }
 
     public StudyResponse fromDomainToAdapterRest(Study study, String database) {
+        if (study == null) {
+            log.error("Study is null, cannot map to StudyResponse.");
+            return new StudyResponse(null, null, null, null, database, "Error: Study not found");
+        }
         return new StudyResponse(
-                study.getProfession().getIdentification()+"",
-                study.getPerson().getIdentification()+"",
+                study.getProfession().getIdentification() + "",
+                study.getPerson().getIdentification() + "",
                 study.getGraduationDate(),
                 study.getUniversityName(),
                 database,
-                "OK");
+                "OK"
+        );
     }
+    
 
     public Study fromAdapterToDomain(StudyRequest request, Profession profession, Person person) {
         log.info("Into fromAdapterToDomain");
