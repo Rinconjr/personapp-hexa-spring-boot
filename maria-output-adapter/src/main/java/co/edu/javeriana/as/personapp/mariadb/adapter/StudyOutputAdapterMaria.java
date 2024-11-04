@@ -26,13 +26,13 @@ public class StudyOutputAdapterMaria implements StudyOutputPort {
 	private StudyRepositoryMaria studyRepositoryMaria;
 
 	@Autowired
-	private EstudiosMapperMaria personaMapperMaria;
+	private EstudiosMapperMaria estudioMapperMaria;
 
 	@Override
 	public Study save(Study study) {
 		log.debug("Into save on Adapter MariaDB");
-        EstudiosEntity persistedStudio = studyRepositoryMaria.save(personaMapperMaria.fromDomainToAdapter(study));
-		return personaMapperMaria.fromAdapterToDomain(persistedStudio);
+        EstudiosEntity persistedStudio = studyRepositoryMaria.save(estudioMapperMaria.fromDomainToAdapter(study));
+		return estudioMapperMaria.fromAdapterToDomain(persistedStudio);
 	}
 
 	@Override
@@ -40,20 +40,18 @@ public class StudyOutputAdapterMaria implements StudyOutputPort {
 		log.debug("Into delete on Adapter MariaDB");
         EstudiosEntity estudio = studyRepositoryMaria.findByProfesionAndPersona(professionID, personID);
 
-		// If the study does not exist
-		if (estudio == null) {
+		if(estudio == null) {
 			return false;
 		}
-		
-		// If the study exists
+
 		studyRepositoryMaria.delete(estudio);
-		return true;
+		return studyRepositoryMaria.findByProfesionAndPersona(professionID,personID) == null;
 	}
 
 	@Override
 	public List<Study> find() {
 		log.debug("Into find on Adapter MariaDB");
-		return studyRepositoryMaria.findAll().stream().map(personaMapperMaria::fromAdapterToDomain)
+		return studyRepositoryMaria.findAll().stream().map(estudioMapperMaria::fromAdapterToDomain)
 				.collect(Collectors.toList());
 	}
 
@@ -62,13 +60,11 @@ public class StudyOutputAdapterMaria implements StudyOutputPort {
 		log.debug("Into findById on Adapter MariaDB");
 		EstudiosEntity estudio = studyRepositoryMaria.findByProfesionAndPersona(professionID, personID);
 
-		// If the study does not exist
-		if (estudio == null) {
+		if(estudio == null) {
 			return null;
 		}
 
-		// If the study exists
-		return personaMapperMaria.fromAdapterToDomain(estudio);
+		return estudioMapperMaria.fromAdapterToDomain(estudio);
 	}
 
 }

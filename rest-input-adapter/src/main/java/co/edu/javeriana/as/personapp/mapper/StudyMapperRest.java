@@ -23,29 +23,48 @@ public class StudyMapperRest {
     }
 
     public StudyResponse fromDomainToAdapterRest(Study study, String database) {
+        log.info("Into fromDomainToAdapterRest with study: {}", study);
         if (study == null) {
-            log.error("Study is null, cannot map to StudyResponse.");
-            return new StudyResponse(null, null, null, null, database, "Error: Study not found");
+            log.error("Study object is null.");
+            return new StudyResponse(null, null, null, null, database, "Error: Study is null");
         }
+        if (study.getPerson() == null) {
+            log.error("Person is null in Study object.");
+            return new StudyResponse(null, null, study.getGraduationDate(), study.getUniversityName(), database, "Error: Person is null in Study");
+        }
+        if (study.getProfession() == null) {
+            log.error("Profession is null in Study object.");
+            return new StudyResponse(study.getPerson().getIdentification() + "", null, study.getGraduationDate(), study.getUniversityName(), database, "Error: Profession is null in Study");
+        }
+    
         return new StudyResponse(
-                study.getProfession().getIdentification() + "",
-                study.getPerson().getIdentification() + "",
-                study.getGraduationDate(),
-                study.getUniversityName(),
-                database,
-                "OK"
+            study.getPerson().getIdentification() + "",
+            study.getProfession().getIdentification() + "",
+            study.getGraduationDate(),
+            study.getUniversityName(),
+            database,
+            "OK"
         );
     }
     
+    
 
     public Study fromAdapterToDomain(StudyRequest request, Profession profession, Person person) {
-        log.info("Into fromAdapterToDomain");
+        log.info("Into fromAdapterToDomain with request: {}, profession: {}, person: {}", request, profession, person);
+    
+        if (profession == null || person == null) {
+            log.error("Either profession or person is null - cannot create Study.");
+            throw new IllegalArgumentException("Both Profession and Person must be provided and non-null.");
+        }
+    
         Study study = new Study();
         study.setProfession(profession);
         study.setPerson(person);
         study.setGraduationDate(request.getGraduationDate());
         study.setUniversityName(request.getUniversity());
+    
         return study;
     }
+    
     
 }

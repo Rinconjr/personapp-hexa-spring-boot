@@ -1,7 +1,7 @@
 package co.edu.javeriana.as.personapp.terminal.adapter;
-/*
+
 import co.edu.javeriana.as.personapp.application.port.in.ProfessionInputPort;
-import co.edu.javeriana.as.personapp.application.port.out.ProfessionOutPort;
+import co.edu.javeriana.as.personapp.application.port.out.ProfessionOutputPort;
 import co.edu.javeriana.as.personapp.application.usecase.ProfessionUseCase;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
@@ -19,11 +19,11 @@ public class ProfesionInputAdapterCli {
 
     @Autowired
     @Qualifier("professionOutputAdapterMaria")
-    private ProfessionOutPort professionOutputPortMaria;
+    private ProfessionOutputPort professionOutputPortMaria;
 
     @Autowired
     @Qualifier("professionOutputAdapterMongo")
-    private ProfessionOutPort professionOutputPortMongo;
+    private ProfessionOutputPort professionOutputPortMongo;
 
     @Autowired
     private ProfesionMapperCli profesionMapperCli;
@@ -51,12 +51,12 @@ public class ProfesionInputAdapterCli {
             .forEach(System.out::println);
     }
 
-    public void crearProfesion(ProfessionModelCli profesionModelCli, String dbOption){
+    public void crearProfesion(ProfessionModelCli ProfessionModelCli, String dbOption){
         log.info("Into crearProfesion ProfessionEntity in Input Adapter");
         try{
             setProfessionOutputPortInjection(dbOption);
-            professionInputPort.create(profesionMapperCli.fromAdapterCliToDomain(profesionModelCli));
-            System.out.println("Profesion creada con exito: "+profesionModelCli.toString());
+            professionInputPort.create(profesionMapperCli.fromAdapterCliToDomain(ProfessionModelCli));
+            System.out.println("Profesion creada con exito: "+ProfessionModelCli.toString());
         }
         catch (Exception e){
             log.warn(e.getMessage());
@@ -64,16 +64,16 @@ public class ProfesionInputAdapterCli {
         }
     }
 
-    public void editarProfesion(ProfessionModelCli profesionModelCli, String dbOption){
+    public void editarProfesion(ProfessionModelCli ProfessionModelCli, String dbOption){
         log.info("Into editarProfesion ProfessionEntity in Input Adapter");
         try{
             setProfessionOutputPortInjection(dbOption);
-            Profession profession= professionInputPort.edit(profesionModelCli.getId(),profesionMapperCli.fromAdapterCliToDomain(profesionModelCli));
+            Profession profession= professionInputPort.edit(ProfessionModelCli.getId(),profesionMapperCli.fromAdapterCliToDomain(ProfessionModelCli));
             System.out.println("Profesion editada con exito: "+profession.toString());
         }
         catch (Exception e){
             log.warn(e.getMessage());
-            System.out.println("Error al editar : "+profesionModelCli.toString());
+            System.out.println("Error al editar : "+ProfessionModelCli.toString());
         }
     }
 
@@ -84,7 +84,7 @@ public class ProfesionInputAdapterCli {
             setProfessionOutputPortInjection(dbOption);
             boolean resultado = professionInputPort.drop(cc);
             if (resultado)
-                System.out.println("Profesion eliminada con exito: "+cc);
+                System.out.println("Profesion eliminada con exito: "+ cc);
         }
         catch (Exception e){
             log.warn(e.getMessage());
@@ -98,8 +98,8 @@ public class ProfesionInputAdapterCli {
         try{
             setProfessionOutputPortInjection(dbOption);
             Profession profession = professionInputPort.findOne(cc);
-            ProfessionModelCli profesionModelCli = profesionMapperCli.fromDomainToAdapterCli(profession);
-            System.out.println("Profesion encontrada: "+profesionModelCli.toString());
+            ProfessionModelCli ProfessionModelCli = profesionMapperCli.fromDomainToAdapterCli(profession);
+            System.out.println("Profesion encontrada: "+ProfessionModelCli.toString());
         }
         catch (Exception e){
             log.warn(e.getMessage());
@@ -107,4 +107,3 @@ public class ProfesionInputAdapterCli {
         }
     }
 }
-    */

@@ -1,5 +1,5 @@
 package co.edu.javeriana.as.personapp.terminal.menu;
-/*
+
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
 import co.edu.javeriana.as.personapp.terminal.adapter.ProfesionInputAdapterCli;
 import co.edu.javeriana.as.personapp.terminal.model.ProfessionModelCli;
@@ -143,4 +143,3 @@ public class ProfesionMenu {
 
 
 }
-    */

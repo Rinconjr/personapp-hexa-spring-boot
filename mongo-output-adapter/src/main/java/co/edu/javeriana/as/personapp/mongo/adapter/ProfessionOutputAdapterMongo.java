@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.mongodb.MongoWriteException;
 
-import co.edu.javeriana.as.personapp.application.port.out.ProfessionOutPort;
+import co.edu.javeriana.as.personapp.application.port.out.ProfessionOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
 import co.edu.javeriana.as.personapp.domain.Profession;
 import co.edu.javeriana.as.personapp.mongo.document.ProfesionDocument;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Adapter("professionOutputAdapterMongo")
-public class ProfessionOutputAdapterMongo implements ProfessionOutPort {
+public class ProfessionOutputAdapterMongo implements ProfessionOutputPort {
 	
 	@Autowired
     private ProfessionRepositoryMongo professionRepositoryMongo;

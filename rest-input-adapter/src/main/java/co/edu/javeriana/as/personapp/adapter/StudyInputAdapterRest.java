@@ -11,7 +11,7 @@ import co.edu.javeriana.as.personapp.application.port.in.PersonInputPort;
 import co.edu.javeriana.as.personapp.application.port.in.ProfessionInputPort;
 import co.edu.javeriana.as.personapp.application.port.in.StudyInputPort;
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
-import co.edu.javeriana.as.personapp.application.port.out.ProfessionOutPort;
+import co.edu.javeriana.as.personapp.application.port.out.ProfessionOutputPort;
 import co.edu.javeriana.as.personapp.application.port.out.StudyOutputPort;
 import co.edu.javeriana.as.personapp.application.usecase.PersonUseCase;
 import co.edu.javeriana.as.personapp.application.usecase.ProfessionUseCase;
@@ -43,7 +43,7 @@ public class StudyInputAdapterRest {
 
     @Autowired
     @Qualifier("professionOutputAdapterMaria")
-    private ProfessionOutPort professionOutputPortMaria;
+    private ProfessionOutputPort professionOutputPortMaria;
 
     // MongoDB Adapters
     @Autowired
@@ -56,7 +56,7 @@ public class StudyInputAdapterRest {
 
     @Autowired
     @Qualifier("professionOutputAdapterMongo")
-    private ProfessionOutPort professionOutputPortMongo;
+    private ProfessionOutputPort professionOutputPortMongo;
 
     // Mapper
     @Autowired
@@ -111,23 +111,56 @@ public class StudyInputAdapterRest {
 
     public StudyResponse crearEstudio(StudyRequest request) {
         try {
+            log.info("Starting crearEstudio with request: {}", request);
+            
             setStudyOutputPortInjection(request.getDatabase());
+            log.info("Output port injection set for database: {}", request.getDatabase());
+    
+            log.info("Fetching person with ID: {}", request.getIdCcPerson());
             Person person = personInputPort.findOne(Integer.parseInt(request.getIdCcPerson()));
-            Profession profession = professionInputPort.findOne(Integer.parseInt(request.getIdProfession()));
-            
-            Study study = studyInputPort.create(studyMapperRest.fromAdapterToDomain(request, profession, person));
-            
-            if (request.getDatabase().equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
-                return studyMapperRest.fromDomainToAdapterRestMaria(study);
-            } else {
-                return studyMapperRest.fromDomainToAdapterRestMongo(study);
+            if (person == null) {
+                log.warn("Person with ID {} not found", request.getIdCcPerson());
+                return new StudyResponse(request.getIdProfession(), request.getIdCcPerson(), request.getGraduationDate(), 
+                        request.getUniversity(), request.getDatabase(), "Error: Person not found");
             }
+            log.info("Person retrieved successfully: {}", person);
+    
+            log.info("Fetching profession with ID: {}", request.getIdProfession());
+            Profession profession = professionInputPort.findOne(Integer.parseInt(request.getIdProfession()));
+            if (profession == null) {
+                log.warn("Profession with ID {} not found", request.getIdProfession());
+                return new StudyResponse(request.getIdProfession(), request.getIdCcPerson(), request.getGraduationDate(), 
+                        request.getUniversity(), request.getDatabase(), "Error: Profession not found");
+            }
+            log.info("Profession retrieved successfully: {}", profession);
+    
+            log.info("Mapping StudyRequest to Study domain object");
+            Study study = studyMapperRest.fromAdapterToDomain(request, profession, person);
+            log.info("Mapped Study object: {}", study);
+    
+            log.info("Attempting to create Study object");
+            Study createdStudy = studyInputPort.create(study);
+            log.info("Study created successfully: {}", createdStudy);
+            if (createdStudy == null) {
+                log.error("Failed to create Study object");
+                return new StudyResponse(request.getIdProfession(), request.getIdCcPerson(), request.getGraduationDate(), 
+                        request.getUniversity(), request.getDatabase(), "Error: Study creation failed");
+            }
+            log.info("Study created successfully: {}", createdStudy);
+    
+            if (request.getDatabase().equalsIgnoreCase(DatabaseOption.MARIA.toString())) {
+                return studyMapperRest.fromDomainToAdapterRestMaria(createdStudy);
+            } else {
+                return studyMapperRest.fromDomainToAdapterRestMongo(createdStudy);
+            }
+    
         } catch (InvalidOptionException | NoExistException e) {
             log.warn(e.getMessage());
             return new StudyResponse(request.getIdProfession(), request.getIdCcPerson(), request.getGraduationDate(), 
                     request.getUniversity(), request.getDatabase(), "Error: Unable to create study");
         }
     }
+    
 
     public StudyResponse buscarEstudio(String database, String idProfession, String idCcPerson) {
         try {

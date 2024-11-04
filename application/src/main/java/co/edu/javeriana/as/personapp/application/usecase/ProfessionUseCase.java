@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import co.edu.javeriana.as.personapp.application.port.in.ProfessionInputPort;
-import co.edu.javeriana.as.personapp.application.port.out.ProfessionOutPort;
+import co.edu.javeriana.as.personapp.application.port.out.ProfessionOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.UseCase;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.domain.Profession;
@@ -18,14 +18,14 @@ import lombok.extern.slf4j.Slf4j;
 public class ProfessionUseCase implements ProfessionInputPort  {
 
 	
-	private ProfessionOutPort professionPersintence;
+	private ProfessionOutputPort professionPersintence;
 	
-	public ProfessionUseCase(@Qualifier("professionOutputAdapterMaria") ProfessionOutPort professionPersintence) {
+	public ProfessionUseCase(@Qualifier("professionOutputAdapterMaria") ProfessionOutputPort professionPersintence) {
 		this.professionPersintence=professionPersintence;
 	}
 	
 	@Override
-	public void setPersintence(ProfessionOutPort professionPersistence) {
+	public void setPersintence(ProfessionOutputPort professionPersistence) {
 		this.professionPersintence=professionPersistence;
 	}
 

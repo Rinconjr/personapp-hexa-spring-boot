@@ -24,7 +24,7 @@ public class StudyUseCase implements StudyInputPort {
     }
 
     @Override
-    public void setPersintence(StudyOutputPort studyPersistence) {
+    public void setPersistence(StudyOutputPort studyPersistence) {
         this.studyPersistence = studyPersistence;
     }
 

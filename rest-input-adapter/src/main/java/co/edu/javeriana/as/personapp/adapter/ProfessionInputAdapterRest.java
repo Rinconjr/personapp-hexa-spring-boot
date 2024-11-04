@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import co.edu.javeriana.as.personapp.application.port.in.ProfessionInputPort;
-import co.edu.javeriana.as.personapp.application.port.out.ProfessionOutPort;
+import co.edu.javeriana.as.personapp.application.port.out.ProfessionOutputPort;
 import co.edu.javeriana.as.personapp.application.usecase.ProfessionUseCase;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
 import co.edu.javeriana.as.personapp.common.exceptions.InvalidOptionException;
@@ -26,11 +26,11 @@ public class ProfessionInputAdapterRest {
 
 	@Autowired
 	@Qualifier("professionOutputAdapterMaria")
-	private ProfessionOutPort professionOutputPortMaria;
+	private ProfessionOutputPort professionOutputPortMaria;
 
 	@Autowired
 	@Qualifier("professionOutputAdapterMongo")
-	private ProfessionOutPort professionOutputPortMongo;
+	private ProfessionOutputPort professionOutputPortMongo;
 
 	@Autowired
 	private ProfessionMapperRest professionMapperRest;

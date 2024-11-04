@@ -95,6 +95,12 @@ public class PhoneInputAdapterRest {
 		} catch (InvalidOptionException e) {
 			log.warn(e.getMessage());
 			return new PhoneResponse(request.getNumber(), "", "", request.getDatabase(), "Error: Invalid Database Option");
+		} catch (NoExistException e) {
+			log.warn(e.getMessage());
+			return new PhoneResponse(request.getNumber(), "", "", request.getDatabase(), "Error: Owner not found");
+		} catch (NumberFormatException e) {
+			log.warn(e.getMessage());
+			return new PhoneResponse(request.getNumber(), "", "", request.getDatabase(), "Error: Invalid Owner ID");
 		}
 	}
 	
@@ -119,7 +125,7 @@ public class PhoneInputAdapterRest {
 	}
 	
 
-	public PhoneResponse eliminarPhone(String database, String number) {
+	public PhoneResponse eliminarPhone(String database, String number){
 		try {
 			setPhoneOutputPortInjection(database);
 			Boolean eliminado = phoneInputPort.drop(number);
@@ -135,7 +141,7 @@ public class PhoneInputAdapterRest {
 	}
 	
 
-	public PhoneResponse actualizarPhone(PhoneRequest request) {
+	public PhoneResponse actualizarPhone(PhoneRequest request){
 		try {
 			setPhoneOutputPortInjection(request.getDatabase());
 			Person owner = personInputPort.findOne(Integer.parseInt(request.getDueno()));

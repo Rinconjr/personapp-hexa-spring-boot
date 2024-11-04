@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class StudyModelCli {
 	
-	 private LocalDate graduationDate;
+	private LocalDate graduationDate;
     private String universityName;
     private String idPerson;
     private String idProfession;

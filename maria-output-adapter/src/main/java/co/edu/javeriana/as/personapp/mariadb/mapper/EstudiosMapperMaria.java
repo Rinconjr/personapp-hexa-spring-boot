@@ -10,7 +10,9 @@ import co.edu.javeriana.as.personapp.common.annotations.Mapper;
 import co.edu.javeriana.as.personapp.domain.Study;
 import co.edu.javeriana.as.personapp.mariadb.entity.EstudiosEntity;
 import co.edu.javeriana.as.personapp.mariadb.entity.EstudiosEntityPK;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Mapper
 public class EstudiosMapperMaria {
 
@@ -24,10 +26,17 @@ public class EstudiosMapperMaria {
 		EstudiosEntityPK estudioPK = new EstudiosEntityPK();
 		estudioPK.setCcPer(study.getPerson().getIdentification());
 		estudioPK.setIdProf(study.getProfession().getIdentification());
+
 		EstudiosEntity estudio = new EstudiosEntity();
 		estudio.setEstudiosPK(estudioPK);
 		estudio.setFecha(validateFecha(study.getGraduationDate()));
 		estudio.setUniver(validateUniver(study.getUniversityName()));
+		estudio.setPersona(personaMapperMaria.fromDomainToAdapter(study.getPerson()));
+
+		log.warn("Genero: " + study.getPerson().getGender());
+
+		estudio.setProfesion(profesionMapperMaria.fromDomainToAdapter(study.getProfession()));
+
 		return estudio;
 	}
 
@@ -44,10 +53,15 @@ public class EstudiosMapperMaria {
 	public Study fromAdapterToDomain(EstudiosEntity estudiosEntity) {
 		Study study = new Study();
 		study.setPerson(personaMapperMaria.fromAdapterToDomain(estudiosEntity.getPersona()));
+
+		log.warn("Genero: " + study.getPerson().getGender());
+
 		study.setProfession(profesionMapperMaria.fromAdapterToDomain(estudiosEntity.getProfesion()));
+
 		study.setGraduationDate(validateGraduationDate(estudiosEntity.getFecha()));
 		study.setUniversityName(validateUniversityName(estudiosEntity.getUniver()));
-		return null;
+		
+		return study;
 	}
 
 	private LocalDate validateGraduationDate(Date fecha) {

@@ -12,7 +12,7 @@ import co.edu.javeriana.as.personapp.domain.Study;
 @Port
 public interface StudyInputPort {
 	
-	public void setPersintence(StudyOutputPort studyPersintence);
+	public void setPersistence(StudyOutputPort studyPersistence);
 	
 	public Study create(Study study);
 
