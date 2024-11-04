@@ -38,8 +38,8 @@ public class StudyMapperRest {
         }
     
         return new StudyResponse(
-            study.getPerson().getIdentification() + "",
             study.getProfession().getIdentification() + "",
+            study.getPerson().getIdentification() + "",
             study.getGraduationDate(),
             study.getUniversityName(),
             database,

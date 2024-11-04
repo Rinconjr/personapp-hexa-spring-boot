@@ -22,7 +22,7 @@ public class PhoneUseCase implements PhoneInputPort {
     }
 
     @Override
-    public void setPersintence(PhoneOutputPort phonePersistence) {
+    public void setPersistence(PhoneOutputPort phonePersistence) {
         this.phonePersistence = phonePersistence;
     }
 
@@ -32,13 +32,13 @@ public class PhoneUseCase implements PhoneInputPort {
         return phonePersistence.save(phone);
     }
 
-     @Override
+    @Override
     public Phone edit(String number, Phone phone) throws NoExistException {
         Phone oldPhone = phonePersistence.findById(number);
         if(oldPhone != null)
             return phonePersistence.save(phone);
 
-        throw new NoExistException("The phone with number " + number+" does not exist into db, cannot be edited");
+        throw new NoExistException("The phone with number " + number + " does not exist into db, cannot be edited");
     }
 
     @Override
@@ -47,12 +47,12 @@ public class PhoneUseCase implements PhoneInputPort {
         if(oldPhone!=null)
             return phonePersistence.delete(number);
 
-        throw new NoExistException("The phone with number " + number+" does not exist into db, cannot be dropped");
+        throw new NoExistException("The phone with number " + number + " does not exist into db, cannot be dropped");
     }
 
     @Override
     public List<Phone> findAll() {
-        log.info("Output; "+phonePersistence.getClass());
+        log.info("Output: "+ phonePersistence.getClass());
         return phonePersistence.find();
     }
 
@@ -62,7 +62,7 @@ public class PhoneUseCase implements PhoneInputPort {
         if(oldPhone!=null)
             return oldPhone;
 
-        throw new NoExistException("The phone with number " + number+" does not exist into db, cannot be found");
+        throw new NoExistException("The phone with number " + number + " does not exist into db, cannot be found");
     }
 
     @Override

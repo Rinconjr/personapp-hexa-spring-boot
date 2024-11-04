@@ -31,7 +31,17 @@ public class StudyOutputAdapterMaria implements StudyOutputPort {
 	@Override
 	public Study save(Study study) {
 		log.debug("Into save on Adapter MariaDB");
+		log.warn("Mapping from domain to adapter, estudio: "+ study);
+		log.warn("Probando si se imprime");
+
+		log.warn("Estudio a mapear: "+ study);
+
+        log.warn("Mapping from domain to adapter, mapper: "+ estudioMapperMaria.fromDomainToAdapter(study).getPersona());
+
         EstudiosEntity persistedStudio = studyRepositoryMaria.save(estudioMapperMaria.fromDomainToAdapter(study));
+
+		log.warn("Persisted estudio: "+ persistedStudio);
+
 		return estudioMapperMaria.fromAdapterToDomain(persistedStudio);
 	}
 

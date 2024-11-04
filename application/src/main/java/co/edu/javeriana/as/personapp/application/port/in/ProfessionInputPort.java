@@ -13,7 +13,7 @@ import co.edu.javeriana.as.personapp.domain.Study;
 @Port
 public interface ProfessionInputPort {
 
-    public void setPersintence(ProfessionOutputPort professionPersintence);
+    public void setPersistence(ProfessionOutputPort professionPersintence);
 	
 	public Profession create(Profession profession);
 

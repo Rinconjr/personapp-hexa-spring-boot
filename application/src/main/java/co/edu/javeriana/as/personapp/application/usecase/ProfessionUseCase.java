@@ -18,50 +18,50 @@ import lombok.extern.slf4j.Slf4j;
 public class ProfessionUseCase implements ProfessionInputPort  {
 
 	
-	private ProfessionOutputPort professionPersintence;
+	private ProfessionOutputPort professionPersistence;
 	
-	public ProfessionUseCase(@Qualifier("professionOutputAdapterMaria") ProfessionOutputPort professionPersintence) {
-		this.professionPersintence=professionPersintence;
+	public ProfessionUseCase(@Qualifier("professionOutputAdapterMaria") ProfessionOutputPort professionPersistence) {
+		this.professionPersistence=professionPersistence;
 	}
 	
 	@Override
-	public void setPersintence(ProfessionOutputPort professionPersistence) {
-		this.professionPersintence=professionPersistence;
+	public void setPersistence(ProfessionOutputPort professionPersistence) {
+		this.professionPersistence=professionPersistence;
 	}
 
 	@Override
 	public Profession create(Profession profession) {
 		log.debug("Into create on Application Domain");
-		return professionPersintence.save(profession);
+		return professionPersistence.save(profession);
 	}
 
 	@Override
 	public Profession edit(Integer identification, Profession profession) throws NoExistException {
-		Profession oldProfession = professionPersintence.findById(identification);
+		Profession oldProfession = professionPersistence.findById(identification);
 		if (oldProfession != null)
-			return professionPersintence.save(profession);
+			return professionPersistence.save(profession);
 		throw new NoExistException(
 				"The person with id " + identification + " does not exist into db, cannot be edited");
 	}
 
 	@Override
 	public Boolean drop(Integer identification) throws NoExistException {
-		Profession oldProfession = professionPersintence.findById(identification);
+		Profession oldProfession = professionPersistence.findById(identification);
 		if (oldProfession != null)
-			return professionPersintence.delete(identification);
+			return professionPersistence.delete(identification);
 		throw new NoExistException(
 				"The person with id " + identification + " does not exist into db, cannot be dropped");
 	}
 
 	@Override
 	public List<Profession> findAll() {
-		log.info("Output: " + professionPersintence.getClass());
-		return professionPersintence.find();
+		log.info("Output: " + professionPersistence.getClass());
+		return professionPersistence.find();
 	}
 
 	@Override
 	public Profession findOne(Integer identification) throws NoExistException {
-		Profession oldProfession = professionPersintence.findById(identification);
+		Profession oldProfession = professionPersistence.findById(identification);
 		if (oldProfession != null)
 			return oldProfession;
 		throw new NoExistException("The person with id " + identification + " does not exist into db, cannot be found");
@@ -75,7 +75,7 @@ public class ProfessionUseCase implements ProfessionInputPort  {
 
 	@Override
 	public List<Study> getStudies(Integer identification) throws NoExistException {
-		Profession oldProfession = professionPersintence.findById(identification);
+		Profession oldProfession = professionPersistence.findById(identification);
 		if (oldProfession != null)
 			return oldProfession.getStudies();
 		throw new NoExistException(

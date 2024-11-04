@@ -30,7 +30,7 @@ public class StudyUseCase implements StudyInputPort {
 
     @Override
     public Study create(Study study) {
-        log.debug("Into create study on Application Domain");
+        log.debug("Dentro de crear estudio en Application Domain");
         return studyPersistence.save(study);
     }
 

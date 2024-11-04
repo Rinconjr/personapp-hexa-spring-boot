@@ -11,7 +11,7 @@ import co.edu.javeriana.as.personapp.domain.Phone;
 @Port
 public interface PhoneInputPort {
 	
-	public void setPersintence(PhoneOutputPort phonePersintence);
+	public void setPersistence(PhoneOutputPort phonePersintence);
 	
 	public Phone create(Phone phone);
 
