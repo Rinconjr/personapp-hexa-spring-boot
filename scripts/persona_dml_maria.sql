@@ -21,25 +21,4 @@ INSERT INTO
 	`persona_db`.`telefono`(`num`,`oper`,`duenio`)
 VALUES
 	(1234567,'Claro',123456789),
-	(7654321,'Movistar',123456789),
-	(9876543,'Tigo',987654321),
-	(3216549,'Claro',321654987),
-	(1472583,'Movistar',147258369),
-	(9638527,'Tigo',963852741);
-
--- INSERT INTO
--- 	`persona_db`.`estudios`(`id_prof`, `cc_per`, `fecha`, `univer`)
--- VALUES
--- 	(1,123456789,'2010-01-01','Universidad Nacional'),
--- 	(2,123456789,'2015-01-01','Universidad de los Andes'),
--- 	(3,123456789,'2020-01-01','Universidad Javeriana'),
--- 	(4,987654321,'2010-01-01','Universidad Nacional'),
--- 	(5,987654321,'2015-01-01','Universidad de los Andes'),
--- 	(1,321654987,'2010-01-01','Universidad Nacional'),
--- 	(2,321654987,'2015-01-01','Universidad de los Andes'),
--- 	(3,321654987,'2020-01-01','Universidad Javeriana'),
--- 	(4,147258369,'2010-01-01','Universidad Nacional'),
--- 	(5,147258369,'2015-01-01','Universidad de los Andes'),
--- 	(1,963852741,'2010-01-01','Universidad Nacional'),
--- 	(2,963852741,'2015-01-01','Universidad de los Andes'),
--- 	(3,963852741,'2020-01-01','Universidad Javeriana');
+	(7654321,'Movistar',147258369);

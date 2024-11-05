@@ -78,8 +78,10 @@ public class TelefonoInputAdapterCli {
             Person owner = personInputPort.findOne(Integer.parseInt(PhoneModelCli.getIdPerson()));
             Phone phone = phoneInputPort.create(telefonoMapperCli.fromAdapterCliToDomain(PhoneModelCli, owner));
             System.out.println("Telefono creado correctamente: " + phone.toString());
-        }catch (Exception e)
-        {
+
+            // Show all phones
+            historial();
+        }catch (Exception e){
             log.warn(e.getMessage());
             System.out.println("Error al crear el telefono");
         }

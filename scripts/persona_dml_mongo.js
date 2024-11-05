@@ -1,5 +1,6 @@
 db = db.getSiblingDB('persona_db');
 
+// Inserción de personas
 db.persona.insertMany([
 	{
 		"_id": NumberInt(123456789),
@@ -14,6 +15,7 @@ db.persona.insertMany([
 		"nombre": "Pepito",
 		"apellido": "Perez",
 		"genero": "M",
+		"edad": NumberInt(15),
 		"_class": "co.edu.javeriana.as.personapp.mongo.document.PersonaDocument"
 	},
 	{
@@ -40,4 +42,22 @@ db.persona.insertMany([
 		"edad": NumberInt(18),
 		"_class": "co.edu.javeriana.as.personapp.mongo.document.PersonaDocument"
 	}
-], { ordered: false })
+], { ordered: false });
+
+db.telefono.insertMany([
+    {
+        "_id": "310234123",
+        "num": "1234567",
+        "oper": "Claro",
+        "primaryDuenio": NumberInt(987654321),
+        "_class": "co.edu.javeriana.as.personapp.mongo.document.TelefonoDocument"
+    },
+    {
+        "_id": "313543921",
+        "num": "7654321",
+        "oper": "Movistar",
+        "primaryDuenio": NumberInt(147258369),
+        "_class": "co.edu.javeriana.as.personapp.mongo.document.TelefonoDocument"
+    }
+], { ordered: false });
+
