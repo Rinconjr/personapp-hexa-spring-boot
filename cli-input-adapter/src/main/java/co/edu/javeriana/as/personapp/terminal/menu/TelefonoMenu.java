@@ -55,7 +55,6 @@ public class TelefonoMenu {
 
     private void menuOpciones(TelefonoInputAdapterCli telefonoInputAdapterCli, Scanner keyboard) {
         boolean isValid = false;
-        String telefono = "";
         do {
             try {
                 mostrarMenuOpciones();
@@ -68,18 +67,16 @@ public class TelefonoMenu {
                         telefonoInputAdapterCli.historial();					
                         break;
                     case OPCION_CREAR:
-                        telefonoInputAdapterCli.crearTelefono(leerEntidad(keyboard), TelefonoMenu.DATABASE);
+                        telefonoInputAdapterCli.crearTelefono(leerEntidad(keyboard), DATABASE);
                         break;
                     case OPCION_ACTUALIZAR:
-                        telefonoInputAdapterCli.editarTelefono(leerEntidad(keyboard), TelefonoMenu.DATABASE);
+                        telefonoInputAdapterCli.editarTelefono(leerEntidad(keyboard), DATABASE);
                         break;
                     case OPCION_BUSCAR:
-                        telefono = leerNumero(keyboard);
-                        telefonoInputAdapterCli.buscarTelefono(TelefonoMenu.DATABASE, telefono);
+                        telefonoInputAdapterCli.buscarTelefono(leerNumero(keyboard), DATABASE);
                         break;
                     case OPCION_ELIMINAR:
-                        telefono = leerNumero(keyboard);
-                        telefonoInputAdapterCli.eliminarTelefono(TelefonoMenu.DATABASE, telefono);
+                        telefonoInputAdapterCli.eliminarTelefono(leerNumero(keyboard), DATABASE);
                         break;
                     default:
                         log.warn("La opción elegida no es válida.");
@@ -136,21 +133,14 @@ public class TelefonoMenu {
         }
     }
 
-    private String leerNumero(Scanner keyboard) {
-        String numero;
-        do {
-            try {
-                System.out.print("Ingrese el número: ");
-                numero = keyboard.nextLine().trim();
-                if (numero.isEmpty()) {
-                    log.warn("El número no puede estar vacío.");
-                } else {
-                    return numero; // Retornar el número si es válido
-                }
-            } catch (Exception e) {
-                log.warn("Error al ingresar el número.");
-            }
-        } while (true);
+    private int leerNumero(Scanner keyboard) {
+        try{
+            System.out.print("Ingrese el numero: ");
+            return keyboard.nextInt();
+        } catch (InputMismatchException e) {
+            log.warn("Solo se permiten números.");
+            return leerNumero(keyboard);
+        }
     }
     
     

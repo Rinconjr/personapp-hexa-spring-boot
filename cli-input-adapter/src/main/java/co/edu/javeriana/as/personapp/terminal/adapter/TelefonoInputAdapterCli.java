@@ -102,11 +102,12 @@ public class TelefonoInputAdapterCli {
         }
     }
 
-    public void eliminarTelefono(String database, String number) {
+    public void eliminarTelefono(int number, String database) {
         log.info("Into eliminar TelefonoEntity in Input Adapter");
         try{
             setPhoneOutputPortInjection(database);
-            boolean resultado = phoneInputPort.drop(number);
+            String number1 = String.valueOf(number);
+            boolean resultado = phoneInputPort.drop(number1);
             if (resultado)
                 System.out.println("Telefono eliminado correctamente: "+number);
         }catch (Exception e)
@@ -116,11 +117,12 @@ public class TelefonoInputAdapterCli {
         }
     }
 
-    public void buscarTelefono(String database, String number) {
+    public void buscarTelefono(int number, String database) {
         log.info("Into buscar TelefonoEntity in Input Adapter");
         try{
             setPhoneOutputPortInjection(database);
-            Phone phone = phoneInputPort.findOne(number);
+            String number1 = String.valueOf(number);
+            Phone phone = phoneInputPort.findOne(number1);
             PhoneModelCli PhoneModelCli = telefonoMapperCli.fromDomainToAdapterCli(phone);
             System.out.println("Telefono encontrado: "+PhoneModelCli.toString());
         }catch (Exception e)

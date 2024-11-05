@@ -56,7 +56,6 @@ public class EstudiosMenu {
     //TODO: FALTA ESTO
     private void menuOpciones(EstudiosInputAdapterCli estudiosInputAdapterCli, Scanner keyboard) {
         boolean isValid = false;
-        String estudio = "";
         do {
             try {
                 mostrarMenuOpciones();
@@ -66,25 +65,19 @@ public class EstudiosMenu {
                         isValid = true;
                         break;
                     case OPCION_VER_TODO:
-                        // estudiosInputAdapterCli.findAll();
+                        estudiosInputAdapterCli.historial();
                         break;
                     case OPCION_CREAR:
-                        estudio = leerEntidad(keyboard).toString();
-                        // estudiosInputAdapterCli.create(leerEntidad(keyboard));
+                        estudiosInputAdapterCli.crearEstudios(leerEntidad(keyboard), DATABASE);
                         break;
                     case OPCION_ACTUALIZAR:
-                        estudio = leerEntidad(keyboard).toString();
-                        // estudiosInputAdapterCli.update(leerEntidad(keyboard));
+                        estudiosInputAdapterCli.editarEstudio(leerEntidad(keyboard), DATABASE);
                         break;
                     case OPCION_BUSCAR:
-                        System.out.println("Ingrese el id del estudio a buscar:");
-                        estudio = keyboard.nextLine();
-                        // estudiosInputAdapterCli.findById(estudio);
+                        estudiosInputAdapterCli.buscarEstudio(leerIdProfesion(keyboard), leerIdPersona(keyboard), DATABASE);
                         break;
                     case OPCION_ELIMINAR:
-                        System.out.println("Ingrese el id del estudio a eliminar:");
-                        estudio = keyboard.nextLine();
-                        // estudiosInputAdapterCli.delete(estudio);
+                        estudiosInputAdapterCli.eliminarEstudio(leerIdProfesion(keyboard), leerIdPersona(keyboard), DATABASE);
                         break;
                     default:
                         log.warn("La opción elegida no es válida.");
@@ -149,5 +142,27 @@ public class EstudiosMenu {
             return leerFecha(keyboard);
         }
     }
+
+    private Integer leerIdProfesion(Scanner keyboard) {
+        try{
+            System.out.print("Ingrese el id de la profesion: ");
+            return keyboard.nextInt();
+        } catch (InputMismatchException e) {
+            log.warn("Solo se permiten números.");
+            return leerIdProfesion(keyboard);
+        }
+    }
+
+    private Integer leerIdPersona(Scanner keyboard) {
+        try{
+            System.out.print("Ingrese el id de la persona: ");
+            return keyboard.nextInt();
+        } catch (InputMismatchException e) {
+            log.warn("Solo se permiten números.");
+            return leerIdPersona(keyboard);
+        }
+    }
+
+    
     
 }
