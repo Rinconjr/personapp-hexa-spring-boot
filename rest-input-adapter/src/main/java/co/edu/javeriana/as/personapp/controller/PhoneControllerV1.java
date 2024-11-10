@@ -39,27 +39,27 @@ public class PhoneControllerV1 {
     @ResponseBody
     @PostMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public PhoneResponse crearPersona(@RequestBody PhoneRequest request) throws NumberFormatException, NoExistException {
-		log.info("esta en el metodo crearTarea en el controller del api");
+		log.info("esta en el metodo Telefono en el controller del api");
 		return phoneInputAdapterRest.crearPhone(request);
 	}
 
 	@ResponseBody
 	@PutMapping(path = "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public PhoneResponse actualizarPersona(@RequestBody PhoneRequest request) {
-		log.info("esta en el metodo actualizarTarea en el controller del api");
+		log.info("esta en el metodo actualizarTelefono en el controller del api");
 		return phoneInputAdapterRest.actualizarPhone(request);
 	}
 
 	@ResponseBody
 	@DeleteMapping(path = "/{number}/{database}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public PhoneResponse eliminarPersona(@PathVariable String number, @PathVariable String database) throws InvalidOptionException {
-		log.info("esta en el metodo eliminarTarea en el controller del api");
+		log.info("esta en el metodo eliminarTelefono en el controller del api");
 		return phoneInputAdapterRest.eliminarPhone(database, number);
 	}
 
 	@ResponseBody
 	@GetMapping(path = "/{number}/{database}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public PhoneResponse persona(@PathVariable String number, @PathVariable String database) {
+	public PhoneResponse Phone(@PathVariable String number, @PathVariable String database) {
 		log.info("Into persona REST API");
 		return phoneInputAdapterRest.buscarPhone(database, number);
 	}

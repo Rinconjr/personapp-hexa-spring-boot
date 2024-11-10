@@ -7,6 +7,7 @@ import co.edu.javeriana.as.personapp.domain.Person;
 import co.edu.javeriana.as.personapp.domain.Phone;
 import co.edu.javeriana.as.personapp.mariadb.entity.PersonaEntity;
 import co.edu.javeriana.as.personapp.mariadb.entity.TelefonoEntity;
+import co.edu.javeriana.as.personapp.domain.Gender;
 import lombok.NonNull;
 
 @Mapper
@@ -37,7 +38,15 @@ public class TelefonoMapperMaria {
 
 	private @NonNull Person validateOwner(PersonaEntity duenio) {
 		Person owner = new Person();
-		owner.setIdentification(duenio.getCc());
+	
+		if (duenio != null) {
+			owner.setIdentification(duenio.getCc());
+			owner.setFirstName(duenio.getNombre());
+			owner.setLastName(duenio.getApellido());
+			owner.setGender(duenio.getGenero().equals("M") ? Gender.MALE : Gender.FEMALE);
+			owner.setAge(duenio.getEdad());
+		}
+	
 		return owner;
 	}
 }
